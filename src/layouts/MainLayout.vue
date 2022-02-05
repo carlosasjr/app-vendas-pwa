@@ -41,9 +41,9 @@
                 <!-- IMAGE USER -->
                 <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
               </q-avatar>
-              <q-toolbar-title class="text-white"
-                >Usuário logado</q-toolbar-title
-              >
+              <q-toolbar-title class="text-white">{{
+                me.name
+              }}</q-toolbar-title>
             </q-toolbar>
           </q-item>
           <hr />
@@ -90,7 +90,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapMutations, mapGetters } from "vuex";
 
 export default {
   name: "MainLayout",
@@ -103,23 +103,29 @@ export default {
     };
   },
 
-  computed: {},
+  computed: {
+    ...mapGetters(["me"]),
+  },
 
   methods: {
-    exit() {
-      this.logout()
-        .then((response) => {
-          this.$q.notify({
-            message: "Logout realizado com sucesso!",
-          });
+    ...mapMutations({
+      logout: "LOGOUT",
+    }),
 
-          //  this.$router.push({ name: "login" });
-        })
-        .catch((error) => {
-          this.$q.notify({
-            message: "Falha ao realizar o logout!",
-          });
+    exit() {
+      try {
+        this.logout();
+
+        this.$router.push({ name: "login" });
+
+        this.$q.notify({
+          message: "Logout realizado com sucesso!",
         });
+      } catch (error) {
+        this.$q.notify({
+          message: "Falha ao realizar o logout!",
+        });
+      }
     },
   },
 };

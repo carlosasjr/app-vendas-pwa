@@ -86,13 +86,13 @@ export default {
   },
 
   methods: {
-    ...mapActions(["getCompanyByCnpj", "createDevice"]),
+    ...mapActions(["getApiCompanyByCnpj", "createApiDevice"]),
 
     async onSubmit() {
       try {
         let params = { ...this.company };
 
-        let company = await this.getCompanyByCnpj(params);
+        let company = await this.getApiCompanyByCnpj(params);
 
         if (company.block == BLOCK) {
           this.$q.notify({
@@ -125,15 +125,15 @@ export default {
 
     async addCompany(company) {
       try {
-        let result = await this.companyExists(company);
+        let companyExist = await this.companyExists(company);
 
-        if (!result) {
+        if (!companyExist) {
           let params = {
             company_id: company.id,
             name: this.company.device,
           };
 
-          await this.createDevice(params);
+          await this.createApiDevice(params);
 
           await this.$db.collection(this.collection).add(company);
 
@@ -153,6 +153,7 @@ export default {
           color: "negative",
         });
       } catch (error) {
+        this.errors = error;
         this.$q.notify({
           message: "Falha ao criar a empresa!",
           color: "negative",

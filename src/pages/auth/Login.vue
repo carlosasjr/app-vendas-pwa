@@ -7,12 +7,13 @@
       lazy-rules="ondemand"
       emit-value
       map-options
+      @input="this.searchSellers"
       :rules="[(val) => !!val || 'Empresa obrigatória']"
     />
 
     <q-select
       v-model="form.vendedor_id"
-      :options="vendedores"
+      :options="this.localSellers"
       label="Vendedor"
       lazy-rules="ondemand"
       emit-value
@@ -42,6 +43,7 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
 export default {
   mounted() {
     this.getLocalCompanies();
+    console.log(this.$store.state.company);
   },
 
   data() {
@@ -52,19 +54,53 @@ export default {
         vendedor_id: "",
         password: "",
       },
-      vendedores: [],
     };
   },
 
   computed: {
-    ...mapGetters(["localCompanies"]),
+    ...mapGetters(["localCompanies", "localSellers"]),
   },
 
   methods: {
-    ...mapActions(["getLocalCompanies"]),
+    ...mapActions([
+      "getLocalCompanies",
+      "getApiSellersByCompany",
+      "getAllLocalSellersByCompany",
+      "createLocalSellers",
+      "getLocalSellerById",
+    ]),
+
+    ...mapMutations({
+      setMe: "SET_ME",
+      setAuthenticated: "SET_AUTHENTICATED",
+    }),
 
     goToCompany() {
       this.$router.push("/companies");
+    },
+
+    async searchSellers() {
+      await this.getAllLocalSellersByCompany(this.form.company_id);
+
+      if (this.localSellers.length == 0) {
+        this.syncSellers();
+      }
+    },
+
+    async syncSellers() {
+      try {
+        let sellers = await this.getApiSellersByCompany({
+          company_id: this.form.company_id,
+        });
+
+        await this.createLocalSellers(sellers);
+        await this.getAllLocalSellersByCompany(this.form.company_id);
+      } catch (error) {
+        this.$q.notify({
+          message: "Falha ao sincronizar os vendedores",
+          color: "red",
+        });
+      }
     },
 
     onSubmit() {
@@ -72,20 +108,24 @@ export default {
     },
 
     async auth() {
-      const params = {
-        device_name: this.deviceName,
-        ...this.form,
-      };
-
       try {
-        try {
-        } catch (Exception) {
+        let seller = await this.getLocalSellerById(this.form.vendedor_id);
+
+        if (seller.password == this.form.password) {
+          this.setAuthenticated(true);
+          this.setMe(seller);
+          this.$router.push("/admin");
+        } else {
           this.$q.notify({
             message: "Dados inválidos, verifique novamente",
             color: "red",
           });
         }
-      } finally {
+      } catch (Exception) {
+        this.$q.notify({
+          message: "Dados inválidos, verifique novamente",
+          color: "red",
+        });
       }
     },
   },
