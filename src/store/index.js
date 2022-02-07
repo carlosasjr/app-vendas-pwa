@@ -5,6 +5,7 @@ import { state, mutations, getters } from "./default";
 import company from "./company";
 import devices from "./devices";
 import sellers from "./sellers";
+import clients from "./clients";
 import auth from "./auth";
 
 Vue.use(Vuex);
@@ -18,6 +19,7 @@ export default function (/* { ssrContext } */) {
       company,
       devices,
       sellers,
+      clients,
     },
 
     state,

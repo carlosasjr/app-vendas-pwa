@@ -14,6 +14,7 @@ const routes = [
         path: "companies",
         component: () => import("pages/Company/Company.vue"),
         name: "companies",
+        meta: { title: "Nova Empresa" },
       },
     ],
   },
@@ -27,6 +28,13 @@ const routes = [
         component: () => import("pages/Index.vue"),
         name: "index",
         meta: { title: "Dashboard", auth: true },
+      },
+
+      {
+        path: "/clients",
+        component: () => import("pages/Clients/Clients.vue"),
+        name: "clients",
+        meta: { title: "Clientes", auth: true },
       },
     ],
   },

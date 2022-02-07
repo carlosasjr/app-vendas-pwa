@@ -49,6 +49,11 @@ export default {
   data() {
     return {
       collection: "companies",
+      device:
+        window.navigator.appCodeName +
+        window.navigator.appName +
+        window.navigator.platform,
+
       form: {
         company_id: "",
         vendedor_id: "",
@@ -66,7 +71,7 @@ export default {
       "getLocalCompanies",
       "getApiSellersByCompany",
       "getAllLocalSellersByCompany",
-      "createLocalSellers",
+      "createUpdateLocalSellers",
       "getLocalSellerById",
     ]),
 
@@ -91,9 +96,10 @@ export default {
       try {
         let sellers = await this.getApiSellersByCompany({
           company_id: this.form.company_id,
+          device: this.device,
         });
 
-        await this.createLocalSellers(sellers);
+        await this.createUpdateLocalSellers(sellers);
         await this.getAllLocalSellersByCompany(this.form.company_id);
       } catch (error) {
         this.$q.notify({

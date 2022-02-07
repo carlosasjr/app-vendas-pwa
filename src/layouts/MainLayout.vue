@@ -1,5 +1,6 @@
 <template>
   <q-layout view="lHh LpR lFf">
+    <preloader />
     <q-header reveal class="bg-system">
       <q-toolbar>
         <q-btn
@@ -12,7 +13,9 @@
         />
 
         <q-toolbar-title>SoftPro + Vendas</q-toolbar-title>
-
+        <q-btn @click="btnSync" flat round dense icon="sync" class="q-mr-xs">
+          <q-tooltip content-class="bg-indigo"> Sincronizar </q-tooltip>
+        </q-btn>
         <q-btn flat round dense icon="circle_notifications" class="q-mr-xs" />
         <q-btn flat round dense icon="fas fa-sign-out-alt" @click="exit">
           <q-tooltip content-class="bg-indigo"> Logout </q-tooltip>
@@ -50,19 +53,19 @@
           <q-scroll-area style="height: 100%">
             <q-list padding>
               <!--SISTEMA -->
-              <q-expansion-item icon="settings_suggest" label="SISTEMA">
+              <q-expansion-item icon="settings_suggest" label="MENU">
                 <!--CLIENTS-->
                 <q-item
                   dense
                   active-class="bg-system"
-                  to="/companies"
+                  to="/clients"
                   exact
                   class="q-ma-sm navigation-item"
                   clickable
                   v-ripple
                 >
                   <q-item-section avatar>
-                    <q-icon name="maps_home_work" />
+                    <q-icon name="people" />
                   </q-item-section>
 
                   <q-item-section>Clientes</q-item-section>
@@ -90,34 +93,101 @@
 </template>
 
 <script>
-import { mapMutations, mapGetters } from "vuex";
+import { mapMutations, mapGetters, mapActions } from "vuex";
+import Preloader from "src/components/Preloader.vue";
 
 export default {
   name: "MainLayout",
-
   mounted() {},
-
   data() {
     return {
       left: false,
+      device:
+        window.navigator.appCodeName +
+        window.navigator.appName +
+        window.navigator.platform,
     };
   },
-
   computed: {
     ...mapGetters(["me"]),
   },
-
   methods: {
     ...mapMutations({
       logout: "LOGOUT",
+      setPreload: "SET_PRELOADER",
+      textPreload: "SET_TEXT_PRELOADER",
     }),
+    ...mapActions([
+      "getApiSellersByCompany",
+      "createUpdateLocalSellers",
+      "getAllLocalSellersByCompany",
+      "getApiClientsByCompany",
+      "createUpdateLocalClient",
+      "getAllLocalClientsByCompany",
+    ]),
+    btnSync() {
+      this.$q
+        .dialog({
+          dark: true,
+          title: "Confirmação",
+          message: "Confirma Sincronização?",
+          persistent: true,
+          ok: {
+            push: true,
+            color: "positive",
+          },
+          cancel: {
+            push: true,
+            color: "negative",
+          },
+        })
+        .onOk(async () => {
+          try {
+            await this.sync();
+            this.$q.notify({
+              message: "Sincronização concluída com sucesso!",
+              color: "positive",
+            });
+          } catch (error) {
+            this.setPreload(false);
+            this.$q.notify({
+              message: "Falha ao sincronziar!",
+              color: "negative",
+            });
+          }
+        });
+    },
+    async sync() {
+      let params = {
+        company_id: this.me.company_id,
+        device: this.device,
+      };
+      this.setPreload(true);
+
+      await this.syncSellers(params);
+      await this.syncClients(params);
+
+      this.setPreload(false);
+    },
+
+    async syncSellers(params) {
+      this.textPreload("Sincronizando Vendedores...");
+      let sellers = await this.getApiSellersByCompany(params);
+      await this.createUpdateLocalSellers(sellers);
+      await this.getAllLocalSellersByCompany(this.me.company_id);
+    },
+
+    async syncClients(params) {
+      this.textPreload("Sincronizando Clientes...");
+      let clients = await this.getApiClientsByCompany(params);
+      await this.createUpdateLocalClient(clients);
+      await this.getAllLocalClientsByCompany(this.me.company_id);
+    },
 
     exit() {
       try {
         this.logout();
-
         this.$router.push({ name: "login" });
-
         this.$q.notify({
           message: "Logout realizado com sucesso!",
         });
@@ -128,6 +198,7 @@ export default {
       }
     },
   },
+  components: { Preloader },
 };
 </script>
 

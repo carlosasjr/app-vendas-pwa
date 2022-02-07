@@ -16,6 +16,7 @@ const actions = {
   getAllLocalSellersByCompany({ commit }, company_id) {
     return new Promise((resolve, reject) => {
       db.collection(`${RESOURCE}`)
+        .orderBy("name")
         .get()
         .then((sellers) => {
           let sellersCompany = sellers.filter((seller) => {
@@ -27,10 +28,12 @@ const actions = {
     });
   },
 
-  createLocalSellers({ commit }, sellers) {
-    sellers.map((seller) => {
-      db.collection(`${RESOURCE}`).add(seller);
-    });
+  createUpdateLocalSellers({ commit }, sellers) {
+    return Promise.all(
+      sellers.map(async (seller) => {
+        return await db.collection(`${RESOURCE}`).add(seller, seller.uuid);
+      })
+    );
   },
 
   getLocalSellerById({ context }, seller_id) {
