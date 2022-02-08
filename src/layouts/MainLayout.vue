@@ -70,6 +70,23 @@
 
                   <q-item-section>Clientes</q-item-section>
                 </q-item>
+
+                <!--PRODUCTS-->
+                <q-item
+                  dense
+                  active-class="bg-system"
+                  to="/products"
+                  exact
+                  class="q-ma-sm navigation-item"
+                  clickable
+                  v-ripple
+                >
+                  <q-item-section avatar>
+                    <q-icon name="category" />
+                  </q-item-section>
+
+                  <q-item-section>Produtos</q-item-section>
+                </q-item>
               </q-expansion-item>
               <!-- FIM SISTEMA -->
             </q-list>
@@ -121,9 +138,14 @@ export default {
       "getApiSellersByCompany",
       "createUpdateLocalSellers",
       "getAllLocalSellersByCompany",
+
       "getApiClientsByCompany",
       "createUpdateLocalClient",
       "getAllLocalClientsByCompany",
+
+      "getApiProductsByCompany",
+      "createUpdateLocalProduct",
+      "getAllLocalProductsByCompany",
     ]),
     btnSync() {
       this.$q
@@ -166,6 +188,7 @@ export default {
 
       await this.syncSellers(params);
       await this.syncClients(params);
+      await this.syncProducts(params);
 
       this.setPreload(false);
     },
@@ -182,6 +205,13 @@ export default {
       let clients = await this.getApiClientsByCompany(params);
       await this.createUpdateLocalClient(clients);
       await this.getAllLocalClientsByCompany(this.me.company_id);
+    },
+
+    async syncProducts(params) {
+      this.textPreload("Sincronizando Produtos...");
+      let products = await this.getApiProductsByCompany(params);
+      await this.createUpdateLocalProduct(products);
+      await this.getAllLocalProductsByCompany(this.me.company_id);
     },
 
     exit() {

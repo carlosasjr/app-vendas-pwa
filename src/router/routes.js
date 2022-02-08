@@ -36,6 +36,13 @@ const routes = [
         name: "clients",
         meta: { title: "Clientes", auth: true },
       },
+
+      {
+        path: "/products",
+        component: () => import("pages/products/Products.vue"),
+        name: "products",
+        meta: { title: "Produtos", auth: true },
+      },
     ],
   },
 

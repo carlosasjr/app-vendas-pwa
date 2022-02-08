@@ -2,8 +2,8 @@
   <q-page padding>
     <q-table
       grid
-      title="Clientes"
-      :data="localClients"
+      title="Produtos"
+      :data="localProducts"
       :columns="columns"
       row-key="id"
       :filter="filter"
@@ -32,44 +32,55 @@
                 class="absolute"
                 style="right: 3px"
                 fab
-                icon="shopping_cart"
+                icon="add_shopping_cart"
                 color="primary"
-                @click="newSale(props.row)"
+                @click="addProduct(props.row)"
               />
 
-              <div class="text-h9 q-mr-sm">{{ props.row.name }}</div>
+              <div class="text-h9 q-mr-sm">{{ props.row.description }}</div>
 
               <div
                 class="col-auto text-grey text-caption row no-wrap items-center"
               >
-                {{ props.row.fantasy }}
+                Preço: {{ props.row.price | formatPrice }}
               </div>
 
               <div
                 class="col-auto text-grey text-caption row no-wrap items-center"
               >
-                {{ props.row.city }} / {{ props.row.uf }}
+                Estoque: {{ props.row.stock }}
               </div>
             </q-card-section>
           </q-card>
         </div>
       </template>
     </q-table>
+
+    <form-product
+      :dialogProduct="dialogProduct"
+      :productSelected="productSelected"
+      :formShow="formShow"
+      @closeDialog="closeDialog"
+    />
   </q-page>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import formProduct from "./partials/FormProduct";
 
 export default {
-  name: "Clients",
+  name: "Products",
   async mounted() {
-    await this.getAllLocalClientsByCompany(this.me.company_id);
+    await this.getAllLocalProductsByCompany(this.me.company_id);
   },
 
   data() {
     return {
+      formShow: true,
       filter: "",
+      dialogProduct: false,
+      productSelected: [],
       initialPagination: {
         sortBy: "desc",
         descending: false,
@@ -78,15 +89,15 @@ export default {
       },
       columns: [
         {
-          name: "name",
+          name: "description",
           align: "center",
-          field: (row) => row.name + " - " + row.cpf_cnpj,
+          field: "description",
           sortable: true,
         },
         {
-          name: "address",
+          name: "price",
           align: "center",
-          field: (row) => row.city + " /" + row.uf,
+          field: "price",
           sortable: true,
         },
       ],
@@ -94,29 +105,26 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["localClients", "me"]),
+    ...mapGetters(["localProducts", "me"]),
   },
 
   methods: {
-    ...mapActions(["getAllLocalClientsByCompany"]),
+    ...mapActions(["getAllLocalProductsByCompany"]),
 
-    newSale(row) {
-      this.$q
-        .dialog({
-          title: "Nova Venda",
-          dark: true,
-          message:
-            "Deseja iniciar uma nova venda para <strong>" +
-            row.name +
-            "</strong>",
-          cancel: true,
-          persistent: true,
-          html: true,
-        })
-        .onOk(() => {
-          // console.log('>>>> OK')
-        });
+    addProduct(row) {
+      this.formShow = false;
+      this.dialogProduct = true;
+      this.productSelected = row;
+      this.formShow = true;
     },
+
+    closeDialog() {
+      this.dialogProduct = false;
+    },
+  },
+
+  components: {
+    formProduct,
   },
 };
 </script>

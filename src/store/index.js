@@ -6,6 +6,7 @@ import company from "./company";
 import devices from "./devices";
 import sellers from "./sellers";
 import clients from "./clients";
+import products from "./products";
 import auth from "./auth";
 
 Vue.use(Vuex);
@@ -20,6 +21,7 @@ export default function (/* { ssrContext } */) {
       devices,
       sellers,
       clients,
+      products,
     },
 
     state,
