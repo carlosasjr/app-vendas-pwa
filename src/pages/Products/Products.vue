@@ -29,6 +29,7 @@
           <q-card>
             <q-card-section>
               <q-btn
+                v-if="hasCart"
                 class="absolute"
                 style="right: 3px"
                 fab
@@ -62,12 +63,14 @@
       :formShow="formShow"
       @closeDialog="closeDialog"
     />
+    <cart />
   </q-page>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
 import formProduct from "./partials/FormProduct";
+import cart from "src/components/Cart.vue";
 
 export default {
   name: "Products",
@@ -105,7 +108,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["localProducts", "me"]),
+    ...mapGetters(["localProducts", "me", "hasCart"]),
   },
 
   methods: {
@@ -125,6 +128,7 @@ export default {
 
   components: {
     formProduct,
+    cart,
   },
 };
 </script>

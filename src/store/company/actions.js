@@ -9,7 +9,11 @@ const actions = {
       api
         .get(`${RESOURCE}`, { params })
         .then((response) => resolve(response.data.data))
-        .catch((error) => reject(error.response.data.errors));
+        .catch((error) => {
+          if (error.response) {
+            reject(error.response.data.errors);
+          } else reject(error);
+        });
     });
   },
 

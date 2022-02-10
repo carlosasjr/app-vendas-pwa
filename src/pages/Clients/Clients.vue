@@ -29,6 +29,7 @@
           <q-card>
             <q-card-section>
               <q-btn
+                v-if="!hasCart"
                 class="absolute"
                 style="right: 3px"
                 fab
@@ -55,11 +56,14 @@
         </div>
       </template>
     </q-table>
+    <cart />
   </q-page>
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { date } from "quasar";
+import { mapActions, mapGetters, mapMutations } from "vuex";
+import cart from "src/components/Cart.vue";
 
 export default {
   name: "Clients",
@@ -94,11 +98,14 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["localClients", "me"]),
+    ...mapGetters(["localClients", "me", "hasCart"]),
   },
 
   methods: {
     ...mapActions(["getAllLocalClientsByCompany"]),
+    ...mapMutations({
+      startCart: "START_CART",
+    }),
 
     newSale(row) {
       this.$q
@@ -114,9 +121,28 @@ export default {
           html: true,
         })
         .onOk(() => {
-          // console.log('>>>> OK')
+          const timeStamp = Date.now();
+          const formattedString = date.formatDate(
+            timeStamp,
+            "YYYY-MM-DD HH:mm:ss"
+          );
+
+          this.startCart({
+            company_id: this.me.company_id,
+            seller_id: this.me.id,
+            client: row,
+            status: this.$SaleStatus.OPEN,
+            uuid: this.$helper.uuid(),
+            created_at: formattedString,
+          });
+
+          this.$router.push({ name: "products" });
         });
     },
+  },
+
+  components: {
+    cart,
   },
 };
 </script>

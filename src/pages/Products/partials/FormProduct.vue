@@ -60,7 +60,7 @@
       </q-card-section>
 
       <q-card-section align="right">
-        <q-btn flat type="submit" color="primary" label="Adicionar" />
+        <q-btn flat color="primary" label="Adicionar" @click="onSubmit" />
         <q-btn flat color="black" label="Cancelar" @click="close" />
       </q-card-section>
     </q-card>
@@ -68,6 +68,7 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
 export default {
   name: "FormProduct",
 
@@ -118,37 +119,58 @@ export default {
 
     descReal() {
       let desc =
-        this.strToFloat(this.item.desc) > 0
-          ? this.strToFloat(this.item.desc)
-          : (this.strToFloat(this.item.qtd) *
-              this.strToFloat(this.productSelected.price) *
-              this.strToFloat(this.item.porc)) /
+        this.$helper.strToFloat(this.item.desc) > 0
+          ? this.$helper.strToFloat(this.item.desc)
+          : (this.$helper.strToFloat(this.item.qtd) *
+              this.$helper.strToFloat(this.productSelected.price) *
+              this.$helper.strToFloat(this.item.porc)) /
             100;
 
-      return this.strToFloat(desc).toFixed(2);
+      return this.$helper.strToFloat(desc).toFixed(2);
     },
 
     total() {
       let vltotal =
-        this.strToFloat(this.item.qtd) *
-          this.strToFloat(this.productSelected.price) -
+        this.$helper.strToFloat(this.item.qtd) *
+          this.$helper.strToFloat(this.productSelected.price) -
         this.descReal;
 
-      return isNaN(vltotal) ? 0 : this.strToFloat(vltotal).toFixed(2);
+      return isNaN(vltotal) ? 0 : this.$helper.strToFloat(vltotal).toFixed(2);
     },
   },
 
   methods: {
-    strToFloat(value) {
-      value = value ?? 0;
-      return parseFloat(value.toString().replace(",", "."));
+    ...mapMutations({
+      addCart: "ADD_ITEMS_CART",
+    }),
+
+    clear() {
+      this.item = {
+        qtd: 1,
+        porc: 0,
+        desc: 0,
+      };
     },
 
     close() {
+      this.clear();
       this.$emit("closeDialog");
     },
 
-    onSubmit() {},
+    onSubmit() {
+      let item = {
+        product: this.productSelected,
+        price: this.productSelected.price,
+        qtd: this.item.qtd,
+        porc: this.item.porc,
+        desc: this.item.desc,
+        descReal: this.descReal,
+        totalItem: this.total,
+      };
+      this.addCart(item);
+
+      this.close();
+    },
   },
 };
 </script>

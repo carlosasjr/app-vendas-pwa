@@ -25,7 +25,6 @@
 
     <q-drawer
       class="left-navigation text-white"
-      show-if-above
       v-model="left"
       style="
         background-image: url(https://demos.creative-tim.com/vue-material-dashboard/img/sidebar-2.32103624.jpg) !important;
@@ -87,6 +86,23 @@
 
                   <q-item-section>Produtos</q-item-section>
                 </q-item>
+
+                <!--SALES-->
+                <q-item
+                  dense
+                  active-class="bg-system"
+                  to="/sales"
+                  exact
+                  class="q-ma-sm navigation-item"
+                  clickable
+                  v-ripple
+                >
+                  <q-item-section avatar>
+                    <q-icon name="shopping_cart" />
+                  </q-item-section>
+
+                  <q-item-section>Vendas</q-item-section>
+                </q-item>
               </q-expansion-item>
               <!-- FIM SISTEMA -->
             </q-list>
@@ -112,13 +128,25 @@
 <script>
 import { mapMutations, mapGetters, mapActions } from "vuex";
 import Preloader from "src/components/Preloader.vue";
+import { api } from "src/boot/axios";
 
 export default {
   name: "MainLayout",
-  mounted() {},
+  /*mounted() {
+    setInterval(async () => {
+      const online = await this.checkOnlineStatus();
+
+      if (online) {
+        await this.sync();
+      }
+    }, 60000);
+  },*/
+
   data() {
     return {
       left: false,
+      spinner: false,
+      message: "",
       device:
         window.navigator.appCodeName +
         window.navigator.appName +
@@ -126,8 +154,13 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["me"]),
+    ...mapGetters(["me", "localSales"]),
+
+    messageSpinner() {
+      return this.message;
+    },
   },
+
   methods: {
     ...mapMutations({
       logout: "LOGOUT",
@@ -146,6 +179,16 @@ export default {
       "getApiProductsByCompany",
       "createUpdateLocalProduct",
       "getAllLocalProductsByCompany",
+
+      "getApiFormPaymentByCompany",
+      "createUpdateLocalFormPayment",
+      "getAllLocalFormPaymentByCompany",
+
+      "getApiConditionPaymentByCompany",
+      "createUpdateLocalConditionPayment",
+      "getAllLocalConditionPaymentByCompany",
+
+      "getAllLocalSalesByStatus",
     ]),
     btnSync() {
       this.$q
@@ -164,54 +207,126 @@ export default {
           },
         })
         .onOk(async () => {
-          try {
-            await this.sync();
-            this.$q.notify({
-              message: "Sincronização concluída com sucesso!",
-              color: "positive",
-            });
-          } catch (error) {
-            this.setPreload(false);
-            this.$q.notify({
-              message: "Falha ao sincronziar!",
-              color: "negative",
-            });
-          }
+          await this.sync();
         });
     },
+
     async sync() {
-      let params = {
-        company_id: this.me.company_id,
-        device: this.device,
-      };
-      this.setPreload(true);
+      try {
+        this.spinner = true;
+        let params = {
+          company_id: this.me.company_id,
+          device: this.device,
+          seller_id: this.me.id,
+        };
 
-      await this.syncSellers(params);
-      await this.syncClients(params);
-      await this.syncProducts(params);
+        this.loadSpinner();
 
-      this.setPreload(false);
+        /* await this.syncSellers(params);
+        await this.syncClients(params);
+        await this.syncProducts(params);
+        await this.syncFormPayments(params);
+        await this.syncConditionPayments(params);*/
+        await this.syncLocalSales(params);
+      } catch (error) {
+        this.$q.notify({
+          message: "Falha ao sincronziar!",
+          color: "negative",
+        });
+      } finally {
+        this.spinner = false;
+      }
     },
 
     async syncSellers(params) {
-      this.textPreload("Sincronizando Vendedores...");
       let sellers = await this.getApiSellersByCompany(params);
-      await this.createUpdateLocalSellers(sellers);
-      await this.getAllLocalSellersByCompany(this.me.company_id);
+      if (sellers.length > 0) {
+        this.message = "Sincronizando Vendedores...";
+        await this.createUpdateLocalSellers(sellers);
+        await this.getAllLocalSellersByCompany(this.me.company_id);
+      }
     },
 
     async syncClients(params) {
-      this.textPreload("Sincronizando Clientes...");
       let clients = await this.getApiClientsByCompany(params);
-      await this.createUpdateLocalClient(clients);
-      await this.getAllLocalClientsByCompany(this.me.company_id);
+      if (clients.length > 0) {
+        this.message = "Sincronizando Clientes...";
+        await this.createUpdateLocalClient(clients);
+        await this.getAllLocalClientsByCompany(this.me.company_id);
+      }
     },
 
     async syncProducts(params) {
-      this.textPreload("Sincronizando Produtos...");
       let products = await this.getApiProductsByCompany(params);
-      await this.createUpdateLocalProduct(products);
-      await this.getAllLocalProductsByCompany(this.me.company_id);
+      if (products.length > 0) {
+        this.message = "Sincronizando Produtos...";
+        await this.createUpdateLocalProduct(products);
+        await this.getAllLocalProductsByCompany(this.me.company_id);
+      }
+    },
+
+    async syncFormPayments(params) {
+      let formPayments = await this.getApiFormPaymentByCompany(params);
+      if (formPayments.length > 0) {
+        this.message = "Sincronizando Formas de Pagamento...";
+        await this.createUpdateLocalFormPayment(formPayments);
+        await this.getAllLocalFormPaymentByCompany(this.me.company_id);
+      }
+    },
+
+    async syncConditionPayments(params) {
+      let conditionPayments = await this.getApiConditionPaymentByCompany(
+        params
+      );
+      if (conditionPayments.length > 0) {
+        this.message = "Sincronizando Condições de Pagamento...";
+        await this.createUpdateLocalConditionPayment(conditionPayments);
+        await this.getAllLocalConditionPaymentByCompany(this.me.company_id);
+      }
+    },
+
+    async syncLocalSales(params) {
+      params.status = this.$SaleStatus.FINISH;
+      await this.getAllLocalSalesByStatus(params);
+
+      if (this.localSales.length > 0) {
+        this.message = "Sincronizando Vendas...";
+      }
+    },
+
+    loadSpinner() {
+      const notif = this.$q.notify({
+        group: false,
+        timeout: 0,
+        spinner: this.spinner,
+        message: "",
+      });
+
+      const interval = setInterval(() => {
+        notif({
+          message: this.message,
+        });
+
+        if (!this.spinner) {
+          notif({
+            icon: "done",
+            spinner: false,
+            message: "Sincronização concluída",
+            timeout: 600,
+          });
+
+          clearInterval(interval);
+        }
+      }, 500);
+    },
+
+    async checkOnlineStatus() {
+      try {
+        const online = await api("/ok");
+        return online.status >= 200 && online.status < 300;
+      } catch (err) {
+        return false;
+      }
     },
 
     exit() {

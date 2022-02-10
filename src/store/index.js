@@ -7,6 +7,10 @@ import devices from "./devices";
 import sellers from "./sellers";
 import clients from "./clients";
 import products from "./products";
+import formPayments from "./formPayments";
+import conditionPayments from "./conditionPayments";
+import cart from "./cart";
+import sales from "./sales";
 import auth from "./auth";
 
 Vue.use(Vuex);
@@ -22,6 +26,10 @@ export default function (/* { ssrContext } */) {
       sellers,
       clients,
       products,
+      formPayments,
+      conditionPayments,
+      cart,
+      sales,
     },
 
     state,
