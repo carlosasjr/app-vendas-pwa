@@ -1,11 +1,11 @@
 import { api } from "src/boot/axios";
 import { db } from "src/boot/database";
+import { status } from "src/boot/constants";
 
 const RESOURCE = "sales";
 
 const actions = {
   getAllLocalSalesByCompany({ commit }, params) {
-    console.log(params.company_id, params.seller_id);
     return new Promise((resolve, reject) => {
       db.collection(`${RESOURCE}`)
         .orderBy("created_at", "desc")
@@ -42,6 +42,27 @@ const actions = {
     });
   },
 
+  getAllLocalSalesFinish({ commit }, params) {
+    return new Promise((resolve, reject) => {
+      db.collection(`${RESOURCE}`)
+        .orderBy("created_at", "desc")
+        .get()
+        .then((sales) => {
+          let salesCompany = sales.filter((sale) => {
+            return (
+              sale.company_id == params.company_id &&
+              sale.seller_id == params.seller_id &&
+              sale.status == params.status
+            );
+          });
+
+          resolve(salesCompany);
+        })
+
+        .catch((error) => reject(error));
+    });
+  },
+
   async createUpdateLocalSale({ commit }, sale) {
     return await db.collection(`${RESOURCE}`).add(sale, sale.uuid);
   },
@@ -52,6 +73,44 @@ const actions = {
 
   async deleteLocalSale({ context }, uuid) {
     return await db.collection(`${RESOURCE}`).doc({ uuid: uuid }).delete();
+  },
+
+  async updateLocalSaleIntegrated({ context }, uuid) {
+    return await db.collection(`${RESOURCE}`).doc({ uuid: uuid }).update({
+      status: status.INTEGRATED,
+    });
+  },
+
+  async updateLocalSaleProcessed({ context }, uuid) {
+    return await db.collection(`${RESOURCE}`).doc({ uuid: uuid }).update({
+      status: status.PROCESSED,
+    });
+  },
+
+  getApiAllProcessedByCompany({ context }, params) {
+    return new Promise((resolve, reject) => {
+      api
+        .get(`${RESOURCE}/all-processed?`, { params })
+        .then((response) => resolve(response.data.data))
+        .catch((error) => {
+          if (error.response) {
+            reject(error.response.data.errors);
+          } else reject(error);
+        });
+    });
+  },
+
+  createApiSale({ commit }, sale) {
+    return new Promise((resolve, reject) => {
+      api
+        .post(`${RESOURCE}`, sale)
+        .then((response) => resolve(response.data))
+        .catch((error) => {
+          if (error.response) {
+            reject(error.response.data.errors);
+          } else reject(error);
+        });
+    });
   },
 };
 

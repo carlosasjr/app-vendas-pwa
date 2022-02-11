@@ -18,15 +18,20 @@ const actions = {
   },
 
   async getAllLocalConditionPaymentByCompany({ commit }, company_id) {
-    let conditionPayments = await db
-      .collection(`${RESOURCE}`)
-      .orderBy("description")
-      .get();
-    return Promise.all(
-      conditionPayments.filter(async (conditionPayment) => {
-        return conditionPayment.company_id == company_id;
-      }, commit("SET_LOCAL_ALL_CONDITION_PAYMENTS", conditionPayments))
-    );
+    return new Promise((resolve, reject) => {
+      db.collection(`${RESOURCE}`)
+        .orderBy("description")
+        .get()
+        .then((conditions) => {
+          let conditionsCompany = conditions.filter((condition) => {
+            return condition.company_id == company_id && condition.inative == 0;
+          });
+          resolve(
+            commit("SET_LOCAL_ALL_CONDITION_PAYMENTS", conditionsCompany)
+          );
+        })
+        .catch((error) => reject(error));
+    });
   },
 
   async createUpdateLocalConditionPayment({ commit }, conditionPayments) {

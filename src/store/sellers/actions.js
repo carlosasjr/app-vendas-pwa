@@ -24,7 +24,7 @@ const actions = {
         .get()
         .then((sellers) => {
           let sellersCompany = sellers.filter((seller) => {
-            return seller.company_id == company_id;
+            return seller.company_id == company_id && seller.inative == 0;
           });
           resolve(commit("SET_LOCAL_ALL_SELLERS", sellersCompany));
         })

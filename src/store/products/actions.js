@@ -18,15 +18,18 @@ const actions = {
   },
 
   async getAllLocalProductsByCompany({ commit }, company_id) {
-    let products = await db
-      .collection(`${RESOURCE}`)
-      .orderBy("description")
-      .get();
-    return Promise.all(
-      products.filter(async (product) => {
-        return product.company_id == company_id;
-      }, commit("SET_LOCAL_ALL_PRODUCTS", products))
-    );
+    return new Promise((resolve, reject) => {
+      db.collection(`${RESOURCE}`)
+        .orderBy("description")
+        .get()
+        .then((products) => {
+          let productsCompany = products.filter((product) => {
+            return product.company_id == company_id && product.inative == 0;
+          });
+          resolve(commit("SET_LOCAL_ALL_PRODUCTS", productsCompany));
+        })
+        .catch((error) => reject(error));
+    });
   },
 
   async createUpdateLocalProduct({ commit }, products) {

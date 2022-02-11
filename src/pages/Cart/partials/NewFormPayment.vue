@@ -5,7 +5,7 @@
         <q-card-section class="col q-pt-none">
           <q-select
             class="col-12"
-            v-model="form.formPayment_id"
+            v-model="form.form_payment_id"
             :options="this.localFormPayments"
             label="Forma de Pagamento"
             emit-value
@@ -15,7 +15,7 @@
 
           <q-select
             class="col-12"
-            v-model="form.condition_id"
+            v-model="form.condition_payment_id"
             :options="this.localConditionPayments"
             label="Condição de Pagamento"
             emit-value
@@ -84,8 +84,8 @@ export default {
   data() {
     return {
       form: {
-        formPayment_id: "",
-        condition_id: "",
+        form_payment_id: "",
+        condition_payment_id: "",
         price: "",
       },
       moneyFormat: {
@@ -118,12 +118,14 @@ export default {
     async onSubmit() {
       try {
         let formPayment = await this.getLocalFormPaymentById(
-          this.form.formPayment_id
+          this.form.form_payment_id
         );
 
         let conditionPayment = await this.getLocalConditionPaymentById(
-          this.form.condition_id
+          this.form.condition_payment_id
         );
+
+        this.form.price = this.$helper.strToFloat(this.form.price);
 
         let newForm = {
           formPayment,
@@ -144,8 +146,8 @@ export default {
 
     clear() {
       this.form = {
-        formPayment_id: "",
-        condition_id: "",
+        form_payment_id: "",
+        condition_payment_id: "",
         price: "",
       };
     },

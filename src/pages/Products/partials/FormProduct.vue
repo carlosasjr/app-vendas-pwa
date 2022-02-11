@@ -159,6 +159,7 @@ export default {
 
     onSubmit() {
       let item = {
+        product_id: this.productSelected.id,
         product: this.productSelected,
         price: this.productSelected.price,
         qtd: this.item.qtd,

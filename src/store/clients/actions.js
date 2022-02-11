@@ -18,12 +18,18 @@ const actions = {
   },
 
   async getAllLocalClientsByCompany({ commit }, company_id) {
-    let clients = await db.collection(`${RESOURCE}`).orderBy("name").get();
-    return Promise.all(
-      clients.filter(async (client) => {
-        return client.company_id == company_id;
-      }, commit("SET_LOCAL_ALL_CLIENTS", clients))
-    );
+    return new Promise((resolve, reject) => {
+      db.collection(`${RESOURCE}`)
+        .orderBy("name")
+        .get()
+        .then((clients) => {
+          let clientsCompany = clients.filter((client) => {
+            return client.company_id == company_id && client.inative == 0;
+          });
+          resolve(commit("SET_LOCAL_ALL_CLIENTS", clientsCompany));
+        })
+        .catch((error) => reject(error));
+    });
   },
 
   async createUpdateLocalClient({ commit }, clients) {

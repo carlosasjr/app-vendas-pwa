@@ -4,6 +4,7 @@ export default function () {
       uuid: "",
       company_id: "",
       seller_id: "",
+      client_id: "",
       client: "",
       status: "",
       items: [],

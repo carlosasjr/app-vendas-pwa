@@ -166,6 +166,8 @@ export default {
       logout: "LOGOUT",
       setPreload: "SET_PRELOADER",
       textPreload: "SET_TEXT_PRELOADER",
+      updateStatusIntegrated: "UPDATE_STATUS_SALE_INTEGRATED",
+      updateStatusProcessed: "UPDATE_STATUS_SALE_PROCESSED",
     }),
     ...mapActions([
       "getApiSellersByCompany",
@@ -188,7 +190,11 @@ export default {
       "createUpdateLocalConditionPayment",
       "getAllLocalConditionPaymentByCompany",
 
-      "getAllLocalSalesByStatus",
+      "getAllLocalSalesFinish",
+      "createApiSale",
+      "updateLocalSaleIntegrated",
+      "updateLocalSaleProcessed",
+      "getApiAllProcessedByCompany",
     ]),
     btnSync() {
       this.$q
@@ -222,12 +228,13 @@ export default {
 
         this.loadSpinner();
 
-        /* await this.syncSellers(params);
+        await this.syncSellers(params);
         await this.syncClients(params);
         await this.syncProducts(params);
         await this.syncFormPayments(params);
-        await this.syncConditionPayments(params);*/
+        await this.syncConditionPayments(params);
         await this.syncLocalSales(params);
+        await this.syncSalesProcessed(params);
       } catch (error) {
         this.$q.notify({
           message: "Falha ao sincronziar!",
@@ -287,10 +294,32 @@ export default {
 
     async syncLocalSales(params) {
       params.status = this.$SaleStatus.FINISH;
-      await this.getAllLocalSalesByStatus(params);
+      let sales = await this.getAllLocalSalesFinish(params);
 
-      if (this.localSales.length > 0) {
+      if (sales.length > 0) {
         this.message = "Sincronizando Vendas...";
+        Promise.all(
+          sales.map(async (sale) => {
+            await this.createApiSale(sale);
+            await this.updateLocalSaleIntegrated(sale.uuid);
+            this.updateStatusIntegrated(sale.uuid);
+          })
+        );
+      }
+    },
+
+    async syncSalesProcessed(params) {
+      let sales = await this.getApiAllProcessedByCompany(params);
+
+      if (sales.length > 0) {
+        this.message = "Sincronizando Vendas Processadas...";
+
+        Promise.all(
+          sales.map(async (sale) => {
+            await this.updateLocalSaleProcessed(sale.uuid);
+            this.updateStatusProcessed(sale);
+          })
+        );
       }
     },
 

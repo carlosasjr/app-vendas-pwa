@@ -126,10 +126,10 @@ export default {
             timeStamp,
             "YYYY-MM-DD HH:mm:ss"
           );
-
           this.startCart({
             company_id: this.me.company_id,
             seller_id: this.me.id,
+            client_id: row.id,
             client: row,
             status: this.$SaleStatus.OPEN,
             uuid: this.$helper.uuid(),

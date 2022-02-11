@@ -2,6 +2,7 @@ const mutations = {
   START_CART(state, params) {
     state.cart.uuid = params.uuid;
     state.cart.company_id = params.company_id;
+    state.cart.client_id = params.client_id;
     state.cart.client = params.client;
     state.cart.seller_id = params.seller_id;
     state.cart.status = params.status;

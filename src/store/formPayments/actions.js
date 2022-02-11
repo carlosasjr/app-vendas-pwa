@@ -18,15 +18,18 @@ const actions = {
   },
 
   async getAllLocalFormPaymentByCompany({ commit }, company_id) {
-    let formPayments = await db
-      .collection(`${RESOURCE}`)
-      .orderBy("description")
-      .get();
-    return Promise.all(
-      formPayments.filter(async (formPayment) => {
-        return formPayment.company_id == company_id;
-      }, commit("SET_LOCAL_ALL_FORM_PAYMENTS", formPayments))
-    );
+    return new Promise((resolve, reject) => {
+      db.collection(`${RESOURCE}`)
+        .orderBy("description")
+        .get()
+        .then((formsPayments) => {
+          let formsPaymentCompany = formsPayments.filter((form) => {
+            return form.company_id == company_id && form.inative == 0;
+          });
+          resolve(commit("SET_LOCAL_ALL_FORM_PAYMENTS", formsPaymentCompany));
+        })
+        .catch((error) => reject(error));
+    });
   },
 
   async createUpdateLocalFormPayment({ commit }, formPayments) {
