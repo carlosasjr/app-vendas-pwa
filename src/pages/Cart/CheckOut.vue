@@ -49,6 +49,9 @@
               <q-item-label caption lines="1"
                 >{{ item.qtd }} X {{ item.price | formatPrice }}</q-item-label
               >
+              <q-item-label v-if="item.descReal != ''" caption lines="1"
+                >Desc. R${{ item.descReal | formatPrice }}</q-item-label
+              >
             </q-item-section>
 
             <q-item-section side>

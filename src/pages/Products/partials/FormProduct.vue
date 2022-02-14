@@ -4,12 +4,22 @@
       <q-card-section>
         <div class="text-h6">
           <strong>Produto: {{ productSelected.description }}</strong>
-          {{ productSelected.price }}
         </div>
       </q-card-section>
 
       <q-card-section class="col q-pt-none">
         <q-form @submit="onSubmit">
+          <q-item class="col-12">
+            <q-item-section>
+              <q-input
+                input-class="text-right"
+                v-model="item.price"
+                label="Preço Unitário"
+                v-money="moneyFormat"
+              />
+            </q-item-section>
+          </q-item>
+
           <q-item class="col-12">
             <q-item-section>
               <q-input
@@ -90,6 +100,12 @@ export default {
     },
   },
 
+  watch: {
+    productSelected() {
+      this.item.price = parseFloat(this.productSelected.price).toFixed(2);
+    },
+  },
+
   data() {
     return {
       moneyFormat: {
@@ -104,6 +120,7 @@ export default {
         qtd: 1,
         porc: 0,
         desc: 0,
+        price: 0,
       },
     };
   },
@@ -122,20 +139,19 @@ export default {
         this.$helper.strToFloat(this.item.desc) > 0
           ? this.$helper.strToFloat(this.item.desc)
           : (this.$helper.strToFloat(this.item.qtd) *
-              this.$helper.strToFloat(this.productSelected.price) *
+              this.$helper.strToFloat(this.item.price) *
               this.$helper.strToFloat(this.item.porc)) /
             100;
 
-      return this.$helper.strToFloat(desc).toFixed(2);
+      return desc;
     },
 
     total() {
       let vltotal =
         this.$helper.strToFloat(this.item.qtd) *
-          this.$helper.strToFloat(this.productSelected.price) -
-        this.descReal;
-
-      return isNaN(vltotal) ? 0 : this.$helper.strToFloat(vltotal).toFixed(2);
+          this.$helper.strToFloat(this.item.price) -
+        this.$helper.strToFloat(this.descReal);
+      return isNaN(vltotal) ? 0 : vltotal;
     },
   },
 
@@ -149,6 +165,7 @@ export default {
         qtd: 1,
         porc: 0,
         desc: 0,
+        price: 0,
       };
     },
 
@@ -161,12 +178,12 @@ export default {
       let item = {
         product_id: this.productSelected.id,
         product: this.productSelected,
-        price: this.productSelected.price,
-        qtd: this.item.qtd,
-        porc: this.item.porc,
-        desc: this.item.desc,
-        descReal: this.descReal,
-        totalItem: this.total,
+        price: this.$helper.strToFloat(this.item.price),
+        qtd: this.$helper.strToFloat(this.item.qtd),
+        porc: this.$helper.strToFloat(this.item.porc),
+        desc: this.$helper.strToFloat(this.item.desc),
+        descReal: this.$helper.strToFloat(this.descReal),
+        totalItem: this.$helper.strToFloat(this.total),
       };
       this.addCart(item);
 

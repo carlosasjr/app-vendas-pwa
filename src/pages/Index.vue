@@ -1,10 +1,6 @@
 <template>
   <q-page class="flex flex-center">
-    <img
-      alt="Quasar logo"
-      src="~assets/quasar-logo-vertical.svg"
-      style="width: 200px; height: 200px"
-    />
+    <div id="particles-js" class="bg_fundo"></div>
     <cart />
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
       <q-fab color="purple" direction="up">
@@ -57,3 +53,20 @@ export default {
   },
 };
 </script>
+
+<style>
+#particles-js {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+.bg_fundo {
+  background-image: url("../assets/images/mais_vendas.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+</style>

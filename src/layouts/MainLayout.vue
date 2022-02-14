@@ -12,7 +12,7 @@
           class="q-mr-sm"
         />
 
-        <q-toolbar-title>SoftPro + Vendas</q-toolbar-title>
+        <q-toolbar-title @click="goToIndex">SoftPro + Vendas</q-toolbar-title>
         <q-btn @click="btnSync" flat round dense icon="sync" class="q-mr-xs">
           <q-tooltip content-class="bg-indigo"> Sincronizar </q-tooltip>
         </q-btn>
@@ -52,7 +52,7 @@
           <q-scroll-area style="height: 100%">
             <q-list padding>
               <!--SISTEMA -->
-              <q-expansion-item icon="settings_suggest" label="MENU">
+              <q-expansion-item icon="menu" label="MENU">
                 <!--CLIENTS-->
                 <q-item
                   dense
@@ -132,7 +132,7 @@ import { api } from "src/boot/axios";
 
 export default {
   name: "MainLayout",
-  /*mounted() {
+  mounted() {
     setInterval(async () => {
       const online = await this.checkOnlineStatus();
 
@@ -140,7 +140,7 @@ export default {
         await this.sync();
       }
     }, 60000);
-  },*/
+  },
 
   data() {
     return {
@@ -195,6 +195,8 @@ export default {
       "updateLocalSaleIntegrated",
       "updateLocalSaleProcessed",
       "getApiAllProcessedByCompany",
+
+      "updateApiDeviceSync",
     ]),
     btnSync() {
       this.$q
@@ -235,6 +237,7 @@ export default {
         await this.syncConditionPayments(params);
         await this.syncLocalSales(params);
         await this.syncSalesProcessed(params);
+        await this.updateApiDeviceSync(params);
       } catch (error) {
         this.$q.notify({
           message: "Falha ao sincronziar!",
@@ -358,6 +361,10 @@ export default {
       }
     },
 
+    goToIndex() {
+      this.$router.push("/admin");
+    },
+
     exit() {
       try {
         this.logout();
@@ -378,7 +385,7 @@ export default {
 
 <style>
 .q-drawer {
-  background-image: url(http://theplace.com.br/assets/images/backgroup_menu.jpg) !important;
+  background-image: url("../assets/images/backgroup_menu.jpg") !important;
   background-size: cover !important;
 }
 

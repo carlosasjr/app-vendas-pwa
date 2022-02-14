@@ -13,7 +13,24 @@ export default async ({ Vue, store }) => {
 
     strToFloat(value) {
       value = value ?? 0;
-      return parseFloat(value.toString().replace(",", "."));
+
+      if (
+        value.toString().indexOf(",") > -1 ||
+        value.toString().indexOf(".") > -1
+      ) {
+        value = parseInt(value.toString().replace(/[.,]/g, ""));
+        return value / 100;
+      }
+
+      return parseInt(value.toString().replace(/[.,]/g, ""));
+    },
+
+    formatFloat(value) {
+      value = value ?? 0;
+      if (typeof value == "string")
+        return parseInt(value.toString().replace(/[.,]/g, "")) / 100;
+
+      return value;
     },
   };
 };
