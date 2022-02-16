@@ -38,13 +38,13 @@
 
         <q-list>
           <q-item>
-            <q-item-section>
-              <q-item-label><strong> balance</strong></q-item-label>
-            </q-item-section>
+            <q-item-section> </q-item-section>
 
             <q-item-section side>
               <q-item-label
-                ><strong> R$ {{ balance | formatPrice }}</strong></q-item-label
+                ><strong
+                  >Saldo: R$ {{ balance | formatPrice }}</strong
+                ></q-item-label
               >
             </q-item-section>
           </q-item>

@@ -115,7 +115,7 @@
             </q-item-section>
 
             <q-item-section side>
-              <q-item-label>R$ {{ item.price }}</q-item-label>
+              <q-item-label>R$ {{ item.price | formatPrice }}</q-item-label>
             </q-item-section>
           </q-item>
         </q-list>
@@ -224,17 +224,14 @@ export default {
     totalFormas() {
       let total = 0;
       this.cart.payments.map((item) => {
-        total += this.$helper.strToFloat(item.price);
+        total += item.price;
       });
 
       return total;
     },
 
     balance() {
-      return (
-        this.$helper.strToFloat(this.subtotal) -
-        this.$helper.strToFloat(this.totalFormas)
-      );
+      return this.subtotal - this.totalFormas;
     },
   },
 
