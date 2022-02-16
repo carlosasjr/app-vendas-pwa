@@ -120,8 +120,8 @@ module.exports = function (ctx) {
       workboxPluginMode: "GenerateSW", // 'GenerateSW' or 'InjectManifest'
       workboxOptions: { skipWaiting: true, clientsClaim: true }, // only for GenerateSW
       manifest: {
-        name: "Softpro +Vendas",
-        short_name: "Softpro +Vendas",
+        name: "Softpro Vendas",
+        short_name: "Softpro Vendas",
         description:
           "App para vendas off-line com sincronização automática com o ERP da Softpro",
         display: "standalone",
