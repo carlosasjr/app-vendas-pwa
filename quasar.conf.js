@@ -122,7 +122,7 @@ module.exports = function (ctx) {
       manifest: {
         name: `Softpro +Vendas`,
         short_name: `Softpro +Vendas`,
-        description: `A Quasar Framework app`,
+        description: `App para vendas off-line com sincronização automática com o ERP da Softpro`,
         display: "standalone",
         orientation: "portrait",
         background_color: "#ffffff",
@@ -152,6 +152,79 @@ module.exports = function (ctx) {
           {
             src: "icons/icon-512x512.png",
             sizes: "512x512",
+            type: "image/png",
+          },
+        ],
+
+        screenshots: [
+          {
+            src: "screenshot/screenshot-1",
+            sizes: "650x1048",
+            type: "image/webpngp",
+          },
+          {
+            src: "screenshot/screenshot-2",
+            sizes: "650x1048",
+            type: "image/png",
+          },
+          {
+            src: "screenshot/screenshot-3",
+            sizes: "722 × 1180",
+            type: "image/png",
+          },
+          {
+            src: "screenshot/screenshot-4",
+            sizes: "722 × 1180",
+            type: "image/png",
+          },
+          {
+            src: "screenshot/screenshot-5",
+            sizes: "722 × 1180",
+            type: "image/png",
+          },
+          {
+            src: "screenshot/screenshot-6",
+            sizes: "722 × 1180",
+            type: "image/png",
+          },
+          {
+            src: "screenshot/screenshot-7",
+            sizes: "722 × 1180",
+            type: "image/png",
+          },
+          {
+            src: "screenshot/screenshot-8",
+            sizes: "722 × 1180",
+            type: "image/png",
+          },
+          {
+            src: "screenshot/screenshot-9",
+            sizes: "722 × 1180",
+            type: "image/png",
+          },
+          {
+            src: "screenshot/screenshot-10",
+            sizes: "722 × 1180",
+            type: "image/png",
+          },
+          {
+            src: "screenshot/screenshot-11",
+            sizes: "722 × 1180",
+            type: "image/png",
+          },
+          {
+            src: "screenshot/screenshot-12",
+            sizes: "722 × 1180",
+            type: "image/png",
+          },
+          {
+            src: "screenshot/screenshot-13",
+            sizes: "722 × 1180",
+            type: "image/png",
+          },
+          {
+            src: "screenshot/screenshot-14",
+            sizes: "722 × 1180",
             type: "image/png",
           },
         ],
