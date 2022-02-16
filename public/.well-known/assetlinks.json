@@ -1,0 +1,6 @@
+[{
+        "relation": ["delegate_permission/common.handle_all_urls"],
+        "target" : { "namespace": "android_app", "package_name": "app.netlify.maisvendas.twa",
+                     "sha256_cert_fingerprints": ["1A:02:79:45:9F:45:78:25:EC:21:3B:FA:C9:50:5E:BB:A2:C4:E5:3B:EE:F7:2B:22:1D:16:9C:54:88:96:58:B1"] }
+      }
+]
