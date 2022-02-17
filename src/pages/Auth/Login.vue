@@ -43,7 +43,6 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
 export default {
   mounted() {
     this.getLocalCompanies();
-    console.log(this.$store.state.company);
   },
 
   data() {

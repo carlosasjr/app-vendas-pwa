@@ -144,7 +144,7 @@ export default {
 
   data() {
     return {
-      sync: true,
+      synchronizing: false,
       left: false,
       spinner: false,
       message: "",
@@ -289,6 +289,7 @@ export default {
       let conditionPayments = await this.getApiConditionPaymentByCompany(
         params
       );
+
       if (conditionPayments.length > 0) {
         this.message = "Sincronizando Condições de Pagamento...";
         await this.createUpdateLocalConditionPayment(conditionPayments);
@@ -328,7 +329,7 @@ export default {
     },
 
     loadSpinner() {
-      this.sync = false;
+      this.synchronizing = true;
       const notif = this.$q.notify({
         group: false,
         timeout: 0,
@@ -342,7 +343,7 @@ export default {
         });
 
         if (!this.spinner) {
-          this.sync = true;
+          this.synchronizing = false;
           notif({
             icon: "done",
             spinner: false,
@@ -358,7 +359,9 @@ export default {
     async checkOnlineStatus() {
       try {
         const online = await api("/ok");
-        return online.status >= 200 && online.status < 300 && this.sync;
+        return (
+          online.status >= 200 && online.status < 300 && !this.synchronizing
+        );
       } catch (err) {
         return false;
       }
