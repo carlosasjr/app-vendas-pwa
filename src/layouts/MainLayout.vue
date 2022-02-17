@@ -144,6 +144,7 @@ export default {
 
   data() {
     return {
+      sync: true,
       left: false,
       spinner: false,
       message: "",
@@ -327,6 +328,7 @@ export default {
     },
 
     loadSpinner() {
+      this.sync = false;
       const notif = this.$q.notify({
         group: false,
         timeout: 0,
@@ -340,6 +342,7 @@ export default {
         });
 
         if (!this.spinner) {
+          this.sync = true;
           notif({
             icon: "done",
             spinner: false,
@@ -355,7 +358,7 @@ export default {
     async checkOnlineStatus() {
       try {
         const online = await api("/ok");
-        return online.status >= 200 && online.status < 300;
+        return online.status >= 200 && online.status < 300 && this.sync;
       } catch (err) {
         return false;
       }
