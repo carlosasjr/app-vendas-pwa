@@ -15,8 +15,8 @@
             <q-input
               v-model="company.cnpj"
               label="CNPJ *"
-              mask="##.###.###/####-##"
               lazy-rules="ondemand"
+              hint="Sem pontos ou barras"
               :rules="[(val) => (val && val.length > 0) || 'CNPJ obrigatório']"
             />
           </q-item-section>
