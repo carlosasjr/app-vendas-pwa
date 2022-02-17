@@ -67,7 +67,7 @@ module.exports = function (ctx) {
       env: {
         API: ctx.dev
           ? "http://maisvendas.test/api"
-          : "http://www.softprovendas.com.br/api",
+          : "https://www.softprovendas.com.br/api",
       },
 
       // https://v1.quasar.dev/quasar-cli/handling-webpack
