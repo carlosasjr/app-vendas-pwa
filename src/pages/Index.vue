@@ -21,6 +21,13 @@
         <q-fab-action
           color="secondary"
           external-label
+          icon="checklist"
+          to="/sales/items"
+        />
+
+        <q-fab-action
+          color="secondary"
+          external-label
           icon="shopping_cart"
           to="/sales"
         />
