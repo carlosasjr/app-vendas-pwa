@@ -25,7 +25,13 @@
                   v-model="item.qtd"
                   label="Quant."
                 />
-                <q-input class="col-4" v-model="item.price" label="Valor" />
+                <q-input
+                  v-if="visibleForm"
+                  class="col-4"
+                  v-model="item.price"
+                  label="Valor"
+                  v-money="moneyFormat"
+                />
                 <div class="col-3 q-ml-sm" style="margin-top: 30px">
                   <strong>R$ {{ totalItem(item) | formatPrice }}</strong>
                 </div>
@@ -62,7 +68,16 @@ export default {
 
   data() {
     return {
+      visibleForm: true,
       sales: {},
+      moneyFormat: {
+        decimal: ",",
+        thousands: ".",
+        prefix: "",
+        suffix: "",
+        precision: 2,
+        masked: false,
+      },
     };
   },
 
@@ -74,7 +89,8 @@ export default {
     ...mapActions(["getAllLocalSalesFinishLater", "createUpdateLocalSale"]),
 
     totalItem(item) {
-      let vltotal = item.qtd * item.price;
+      let vltotal =
+        this.$helper.strToFloat(item.qtd) * this.$helper.strToFloat(item.price);
 
       item.totalItem = vltotal;
 

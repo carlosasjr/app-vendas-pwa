@@ -125,8 +125,6 @@ export default {
           this.form.condition_payment_id
         );
 
-        this.form.price = this.$helper.strToFloat(this.form.price);
-
         let newForm = {
           formPayment,
           conditionPayment,

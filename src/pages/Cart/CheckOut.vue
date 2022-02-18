@@ -47,7 +47,7 @@
             <q-item-section>
               <q-item-label> {{ item.product.description }}</q-item-label>
               <q-item-label caption lines="1"
-                >{{ item.qtd }} X {{ item.price | formatPrice }}</q-item-label
+                >{{ item.qtd }} X {{ item.price }}</q-item-label
               >
               <q-item-label v-if="item.descReal != ''" caption lines="1"
                 >Desc. R${{ item.descReal | formatPrice }}</q-item-label
@@ -115,7 +115,7 @@
             </q-item-section>
 
             <q-item-section side>
-              <q-item-label>R$ {{ item.price | formatPrice }}</q-item-label>
+              <q-item-label>R$ {{ item.price }}</q-item-label>
             </q-item-section>
           </q-item>
         </q-list>
@@ -224,7 +224,7 @@ export default {
     totalFormas() {
       let total = 0;
       this.cart.payments.map((item) => {
-        total += item.price;
+        total += this.$helper.strToFloat(item.price);
       });
 
       return total;

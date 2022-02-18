@@ -150,7 +150,7 @@ export default {
       let vltotal =
         this.$helper.strToFloat(this.item.qtd) *
           this.$helper.strToFloat(this.item.price) -
-        this.$helper.strToFloat(this.descReal);
+        this.descReal;
       return isNaN(vltotal) ? 0 : vltotal;
     },
   },
@@ -178,11 +178,11 @@ export default {
       let item = {
         product_id: this.productSelected.id,
         product: this.productSelected,
-        price: this.$helper.strToFloat(this.item.price),
-        qtd: this.$helper.strToFloat(this.item.qtd),
-        porc: this.$helper.strToFloat(this.item.porc),
-        desc: this.$helper.strToFloat(this.item.desc),
-        descReal: this.$helper.strToFloat(this.descReal),
+        price: this.item.price,
+        qtd: this.item.qtd,
+        porc: this.item.porc,
+        desc: this.item.desc,
+        descReal: this.descReal,
         totalItem: this.total,
       };
       this.addCart(item);
