@@ -134,6 +134,7 @@ export default {
             status: this.$SaleStatus.OPEN,
             uuid: this.$helper.uuid(),
             created_at: formattedString,
+            code_erp: "",
           });
 
           this.$router.push({ name: "products" });

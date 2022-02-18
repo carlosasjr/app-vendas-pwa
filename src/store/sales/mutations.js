@@ -16,7 +16,7 @@ const mutations = {
     state.localSales.map((item) => {
       if (item.uuid == sale.uuid) {
         item.status = status.PROCESSED;
-        item.code_erp = sale.erp_code;
+        item.code_erp = sale.code_erp;
       }
     });
   },

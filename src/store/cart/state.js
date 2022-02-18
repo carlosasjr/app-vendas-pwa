@@ -10,6 +10,7 @@ export default function () {
       items: [],
       payments: [],
       created_at: "",
+      code_erp: "",
     },
   };
 }

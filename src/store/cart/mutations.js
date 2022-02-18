@@ -7,6 +7,7 @@ const mutations = {
     state.cart.seller_id = params.seller_id;
     state.cart.status = params.status;
     state.cart.created_at = params.created_at;
+    state.cart.code_erp = "";
   },
 
   SHOW_CART(state, sale) {

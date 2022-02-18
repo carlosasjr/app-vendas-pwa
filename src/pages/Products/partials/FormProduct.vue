@@ -183,7 +183,7 @@ export default {
         porc: this.$helper.strToFloat(this.item.porc),
         desc: this.$helper.strToFloat(this.item.desc),
         descReal: this.$helper.strToFloat(this.descReal),
-        totalItem: this.$helper.strToFloat(this.total),
+        totalItem: this.total,
       };
       this.addCart(item);
 

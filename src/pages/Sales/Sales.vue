@@ -92,6 +92,13 @@
                     <q-item-label caption lines="1">
                       {{ props.row.status }}
                     </q-item-label>
+                    <q-item-label
+                      caption
+                      lines="1"
+                      v-if="props.row.code_erp !== ''"
+                    >
+                      Erp: {{ props.row.code_erp }}
+                    </q-item-label>
                   </q-item-section>
 
                   <q-item-section side>

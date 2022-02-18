@@ -52,7 +52,28 @@ const actions = {
             return (
               sale.company_id == params.company_id &&
               sale.seller_id == params.seller_id &&
-              sale.status == params.status
+              sale.status == status.FINISH
+            );
+          });
+
+          resolve(salesCompany);
+        })
+
+        .catch((error) => reject(error));
+    });
+  },
+
+  getAllLocalSalesFinishLater({ commit }, params) {
+    return new Promise((resolve, reject) => {
+      db.collection(`${RESOURCE}`)
+        .orderBy("created_at", "desc")
+        .get()
+        .then((sales) => {
+          let salesCompany = sales.filter((sale) => {
+            return (
+              sale.company_id == params.company_id &&
+              sale.seller_id == params.seller_id &&
+              sale.status == status.FINISH_LATER
             );
           });
 
@@ -81,9 +102,10 @@ const actions = {
     });
   },
 
-  async updateLocalSaleProcessed({ context }, uuid) {
-    return await db.collection(`${RESOURCE}`).doc({ uuid: uuid }).update({
+  async updateLocalSaleProcessed({ context }, sale) {
+    return await db.collection(`${RESOURCE}`).doc({ uuid: sale.uuid }).update({
       status: status.PROCESSED,
+      code_erp: sale.code_erp,
     });
   },
 

@@ -103,6 +103,22 @@
 
                   <q-item-section>Vendas</q-item-section>
                 </q-item>
+
+                <q-item
+                  dense
+                  active-class="bg-system"
+                  to="/sales/items"
+                  exact
+                  class="q-ma-sm navigation-item"
+                  clickable
+                  v-ripple
+                >
+                  <q-item-section avatar>
+                    <q-icon name="checklist" />
+                  </q-item-section>
+
+                  <q-item-section>Itens</q-item-section>
+                </q-item>
               </q-expansion-item>
               <!-- FIM SISTEMA -->
             </q-list>
@@ -321,7 +337,7 @@ export default {
 
         Promise.all(
           sales.map(async (sale) => {
-            await this.updateLocalSaleProcessed(sale.uuid);
+            await this.updateLocalSaleProcessed(sale);
             this.updateStatusProcessed(sale);
           })
         );

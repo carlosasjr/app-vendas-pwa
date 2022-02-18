@@ -215,7 +215,7 @@ export default {
     subtotal() {
       let total = 0;
       this.cart.items.map((item) => {
-        total += this.$helper.strToFloat(item.totalItem);
+        total += item.totalItem;
       });
 
       return total;
