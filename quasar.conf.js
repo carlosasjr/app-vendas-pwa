@@ -165,62 +165,32 @@ module.exports = function (ctx) {
           },
           {
             src: "screenshot/screenshot-3",
-            sizes: "460x776",
+            sizes: "650x1048",
             type: "image/png",
           },
           {
             src: "screenshot/screenshot-4",
-            sizes: "460x776",
+            sizes: "650x1048",
             type: "image/png",
           },
           {
             src: "screenshot/screenshot-5",
-            sizes: "460x776",
+            sizes: "650x1048",
             type: "image/png",
           },
           {
             src: "screenshot/screenshot-6",
-            sizes: "460x776",
+            sizes: "650x1048",
             type: "image/png",
           },
           {
             src: "screenshot/screenshot-7",
-            sizes: "460x776",
+            sizes: "650x1048",
             type: "image/png",
           },
           {
             src: "screenshot/screenshot-8",
-            sizes: "460x776",
-            type: "image/png",
-          },
-          {
-            src: "screenshot/screenshot-9",
-            sizes: "460x776",
-            type: "image/png",
-          },
-          {
-            src: "screenshot/screenshot-10",
-            sizes: "460x776",
-            type: "image/png",
-          },
-          {
-            src: "screenshot/screenshot-11",
-            sizes: "460x776",
-            type: "image/png",
-          },
-          {
-            src: "screenshot/screenshot-12",
-            sizes: "460x776",
-            type: "image/png",
-          },
-          {
-            src: "screenshot/screenshot-13",
-            sizes: "460x776",
-            type: "image/png",
-          },
-          {
-            src: "screenshot/screenshot-14",
-            sizes: "460x776",
+            sizes: "650x1048",
             type: "image/png",
           },
         ],
