@@ -256,10 +256,10 @@ export default {
         await this.syncSalesProcessed(params);
         await this.updateApiDeviceSync(params);
       } catch (error) {
-        this.$q.notify({
-          message: "Falha ao sincronziar!",
-          color: "negative",
-        });
+        //this.$q.notify({
+        // message: "Falha ao sincronziar!",
+        //  color: "negative",
+        // });
       } finally {
         this.spinner = false;
       }
