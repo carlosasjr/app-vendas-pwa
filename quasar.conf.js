@@ -123,7 +123,7 @@ module.exports = function (ctx) {
         name: "Softpro Vendas",
         short_name: "Softpro Vendas",
         description:
-          "App para vendas off-line com sincronização automática com o ERP da Softpro",
+          "App para vendas off-line com sincronização automática com o ERP da Softpro Sistemas",
         display: "standalone",
         orientation: "portrait",
         background_color: "#ffffff",
