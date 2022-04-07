@@ -148,7 +148,10 @@ import { api } from "src/boot/axios";
 
 export default {
   name: "MainLayout",
-  mounted() {
+  async mounted() {
+    let device = await this.$db.collection("device").get();
+    this.device = device[0].device;
+
     setInterval(async () => {
       const online = await this.checkOnlineStatus();
 
@@ -164,7 +167,7 @@ export default {
       left: false,
       spinner: false,
       message: "",
-      device: window.navigator.userAgent + window.navigator.platform,
+      device: "",
     };
   },
   computed: {

@@ -57,9 +57,9 @@
 
       <template v-slot:item="props">
         <div class="q-pa-xs col-xs-12 col-sm-6 col-md-4">
-          <q-card class="my-card">
+          <q-card>
             <q-card-section>
-              <q-list>
+              <q-list class="my-card">
                 <q-item clickable v-ripple @click="edit(props.row)">
                   <q-item-section avatar>
                     <q-icon
@@ -204,4 +204,5 @@ export default {
 .my-card
   width: 100%
   max-width: 290px
+  margin: 0
 </style>

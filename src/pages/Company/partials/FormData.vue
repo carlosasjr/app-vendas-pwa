@@ -67,9 +67,11 @@ const LICENSE_EXCEEDED = 0;
 export default {
   name: "FormCompany",
 
-  mounted() {
-    this.company.device =
-      window.navigator.userAgent + window.navigator.platform;
+  async mounted() {
+    let device = await this.$db.collection("device").get();
+
+    if (device.length) this.company.device = device[0].device;
+    else this.company.device = this.$helper.uuid();
   },
 
   data() {
@@ -132,6 +134,10 @@ export default {
           };
 
           await this.createApiDevice(params);
+
+          await this.$db
+            .collection("device")
+            .add({ device: this.company.device });
 
           await this.$db.collection(this.collection).add(company);
 

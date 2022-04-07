@@ -41,14 +41,17 @@
 import { mapActions, mapGetters, mapMutations } from "vuex";
 
 export default {
-  mounted() {
+  async mounted() {
+    let device = await this.$db.collection("device").get();
+    this.device = device[0].device;
+
     this.getLocalCompanies();
   },
 
   data() {
     return {
       collection: "companies",
-      device: window.navigator.userAgent + window.navigator.platform,
+      device: "",
 
       form: {
         company_id: "",
