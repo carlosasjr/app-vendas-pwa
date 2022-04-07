@@ -48,10 +48,7 @@ export default {
   data() {
     return {
       collection: "companies",
-      device:
-        window.navigator.appCodeName +
-        window.navigator.appName +
-        window.navigator.platform,
+      device: window.navigator.userAgent + window.navigator.platform,
 
       form: {
         company_id: "",

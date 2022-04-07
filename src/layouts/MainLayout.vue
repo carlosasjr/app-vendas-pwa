@@ -164,14 +164,11 @@ export default {
       left: false,
       spinner: false,
       message: "",
-      device:
-        window.navigator.appCodeName +
-        window.navigator.appName +
-        window.navigator.platform,
+      device: window.navigator.userAgent + window.navigator.platform,
     };
   },
   computed: {
-    ...mapGetters(["me", "localSales"]),
+    ...mapGetters(["me", "localSales"]),s
 
     messageSpinner() {
       return this.message;
