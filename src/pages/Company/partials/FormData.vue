@@ -69,9 +69,7 @@ export default {
 
   mounted() {
     this.company.device =
-      window.navigator.appCodeName +
-      window.navigator.appName +
-      window.navigator.platform;
+      window.navigator.userAgent + window.navigator.platform;
   },
 
   data() {
