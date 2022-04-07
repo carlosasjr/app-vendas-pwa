@@ -57,7 +57,7 @@
 
       <template v-slot:item="props">
         <div class="q-pa-xs col-xs-12 col-sm-6 col-md-4">
-          <q-card>
+          <q-card class="my-card">
             <q-card-section>
               <q-list>
                 <q-item clickable v-ripple @click="edit(props.row)">
@@ -199,3 +199,9 @@ export default {
   },
 };
 </script>
+
+<style lang="sass" scoped>
+.my-card
+  width: 100%
+  max-width: 290px
+</style>
