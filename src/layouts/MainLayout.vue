@@ -168,7 +168,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["me", "localSales"]),s
+    ...mapGetters(["me", "localSales"]),
 
     messageSpinner() {
       return this.message;
