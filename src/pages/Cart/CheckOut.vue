@@ -231,7 +231,7 @@ export default {
     },
 
     balance() {
-      return this.subtotal - this.totalFormas;
+      return parseFloat(this.subtotal).toFixed(2) - this.totalFormas;
     },
   },
 
