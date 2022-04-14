@@ -35,7 +35,7 @@
                 fab
                 icon="add_shopping_cart"
                 color="primary"
-                @click="addProduct(props.row)"
+                @click="showProduct(props.row)"
               />
 
               <div class="text-h9 q-mr-sm">{{ props.row.description }}</div>
@@ -57,19 +57,20 @@
       </template>
     </q-table>
 
-    <form-product
+    <add-product
       :dialogProduct="dialogProduct"
       :productSelected="productSelected"
       :formShow="formShow"
       @closeDialog="closeDialog"
+      @addProduct="addProduct"
     />
     <cart />
   </q-page>
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
-import formProduct from "./partials/FormProduct";
+import { mapActions, mapGetters, mapMutations } from "vuex";
+import addProduct from "src/components/AddProduct";
 import cart from "src/components/Cart.vue";
 
 export default {
@@ -113,12 +114,19 @@ export default {
 
   methods: {
     ...mapActions(["getAllLocalProductsByCompany"]),
+    ...mapMutations({
+      addCart: "ADD_ITEMS_CART",
+    }),
 
-    addProduct(row) {
+    showProduct(row) {
       this.formShow = false;
       this.dialogProduct = true;
       this.productSelected = row;
       this.formShow = true;
+    },
+
+    addProduct(item) {
+      this.addCart(item);
     },
 
     closeDialog() {
@@ -127,7 +135,7 @@ export default {
   },
 
   components: {
-    formProduct,
+    addProduct,
     cart,
   },
 };

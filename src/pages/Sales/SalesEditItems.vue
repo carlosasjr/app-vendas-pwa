@@ -1,10 +1,16 @@
 <template>
   <q-page padding>
     <q-card class="q-mb-sm" v-for="sale in sales" :key="sale.uuid">
-      <q-card-section>
-        <div class="text-h6">{{ sale.client.name }}</div>
-        <div class="text-subtitle2">{{ sale.created_at | formatDateBr }}</div>
-      </q-card-section>
+      <div class="row justify-between">
+        <q-card-section>
+          <div class="text-h6">{{ sale.client.name }}</div>
+          <div class="text-subtitle2">{{ sale.created_at | formatDateBr }}</div>
+        </q-card-section>
+
+        <q-card-section>
+          <q-btn icon="add" color="primary" @click="showProduct(sale)" />
+        </q-card-section>
+      </div>
 
       <q-separator />
 
@@ -13,8 +19,8 @@
           <q-item
             v-for="(item, index) in sale.items"
             :key="index"
-            clickable
-            v-ripple
+            class="q-mb-sm"
+            :class="{ 'bg-red-2': item.price == '0,00' }"
           >
             <q-item-section>
               <q-item-label> {{ item.product.description }}</q-item-label>
@@ -35,7 +41,24 @@
                 <div class="col-3 q-ml-sm" style="margin-top: 30px">
                   <strong>R$ {{ totalItem(item) | formatPrice }}</strong>
                 </div>
+                <q-input
+                  class="col-12 q-mr-sm"
+                  v-model="item.observation"
+                  label="Observação"
+                />
               </q-item-label>
+            </q-item-section>
+
+            <q-item-section avatar>
+              <q-btn
+                @click="destroy(sale, item)"
+                size="12px"
+                flat
+                dense
+                round
+                color="red"
+                icon="delete"
+              />
             </q-item-section>
           </q-item>
         </q-list>
@@ -47,11 +70,20 @@
         <q-btn flat @click="updateSale(sale)">Atualizar</q-btn>
       </q-card-actions>
     </q-card>
+
+    <add-product
+      :dialogProduct="dialogProduct"
+      @closeDialog="closeDialog"
+      @addProduct="addProduct"
+      :formShow="formShow"
+      @handleFormShow="handleFormShow"
+    />
   </q-page>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import addProduct from "src/components/AddProduct";
 
 export default {
   name: "SalesEditItems",
@@ -68,8 +100,11 @@ export default {
 
   data() {
     return {
+      formShow: true,
+      dialogProduct: false,
       visibleForm: true,
       sales: {},
+      saleSelected: [],
       moneyFormat: {
         decimal: ",",
         thousands: ".",
@@ -87,6 +122,59 @@ export default {
 
   methods: {
     ...mapActions(["getAllLocalSalesFinishLater", "createUpdateLocalSale"]),
+
+    showProduct(sale) {
+      this.saleSelected = { ...sale };
+      this.dialogProduct = true;
+    },
+
+    handleFormShow(status) {
+      this.formShow = status;
+    },
+
+    closeDialog() {
+      this.dialogProduct = false;
+    },
+
+    addProduct(item) {
+      this.saleSelected.items.push(item);
+    },
+
+    destroy(sale, item) {
+      this.$q
+        .dialog({
+          dark: true,
+          title: "Confirmação",
+          message:
+            "Confirma Exclusão do item [" + item.product.description + "]  ?",
+          persistent: true,
+          ok: {
+            push: true,
+            color: "positive",
+          },
+          cancel: {
+            push: true,
+            color: "negative",
+          },
+        })
+        .onOk(() => {
+          try {
+            sale.items = sale.items.filter(
+              (i) => i.product_id != item.product_id
+            );
+
+            this.$q.notify({
+              message: "Item excluído com sucesso!",
+              color: "positive",
+            });
+          } catch (error) {
+            this.$q.notify({
+              message: "Falha ao excluir o item!",
+              color: "negative",
+            });
+          }
+        });
+    },
 
     totalItem(item) {
       let vltotal =
@@ -115,6 +203,10 @@ export default {
         color: "positive",
       });
     },
+  },
+
+  components: {
+    addProduct,
   },
 };
 </script>

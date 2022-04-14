@@ -1,40 +1,9 @@
 <template>
   <q-page padding>
-    <div class="text-center">
-      <q-btn-group rounded>
-        <q-btn
-          rounded
-          color="primary"
-          icon="edit"
-          @click="filterStatus($SaleStatus.FINISH_LATER)"
-        />
-
-        <q-btn
-          rounded
-          color="primary"
-          icon="check"
-          @click="filterStatus($SaleStatus.FINISH)"
-        />
-        <q-btn
-          rounded
-          color="primary"
-          icon="done_all"
-          @click="filterStatus($SaleStatus.INTEGRATED)"
-        />
-        <q-btn
-          rounded
-          color="primary"
-          icon="playlist_add_check_circle"
-          @click="filterStatus($SaleStatus.PROCESSED)"
-        />
-
-        <q-btn rounded color="primary" icon="filter_alt" @click="allStatus()" />
-      </q-btn-group>
-    </div>
     <q-table
       grid
-      title="Vendas"
-      :data="localSales"
+      title="Histórico de vendas"
+      :data="sales"
       :columns="columns"
       row-key="uuid"
       :filter="filter"
@@ -69,9 +38,11 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
 import Sale from "src/components/Sale.vue";
 
 export default {
-  name: "Sales",
+  components: { Sale },
+
+  name: "History",
   async mounted() {
-    this.allStatus();
+    this.load();
   },
 
   data() {
@@ -109,36 +80,29 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["localSales", "me"]),
+    ...mapGetters(["sales", "me"]),
   },
 
   methods: {
-    ...mapActions(["getAllLocalSalesByCompany", "getAllLocalSalesByStatus"]),
+    ...mapActions(["getApiSalesByCompanySeller"]),
     ...mapMutations({
       showCart: "SHOW_CART",
     }),
 
-    filterStatus(status) {
-      let params = {
-        company_id: this.me.company_id,
-        seller_id: this.me.id,
-        status,
-      };
-      this.getAllLocalSalesByStatus(params);
-    },
-
-    allStatus() {
+    async load() {
       let params = {
         company_id: this.me.company_id,
         seller_id: this.me.id,
       };
 
-      this.getAllLocalSalesByCompany(params);
+      try {
+        await this.getApiSalesByCompanySeller(params);
+      } catch (error) {
+        this.$q.notify({
+          message: "Falha ao carregar o histórico de vendas",
+        });
+      }
     },
-  },
-
-  components: {
-    Sale,
   },
 };
 </script>

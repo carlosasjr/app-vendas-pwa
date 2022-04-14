@@ -1,16 +1,20 @@
 const mutations = {
-  SET_AUTHENTICATED(state, status) {
-    state.authenticated = status;
+  SET_AUTHENTICATED(state, me) {
+    state.me = me;
+    state.authenticated = true;
+
+    window.localStorage.setItem('auth', JSON.stringify(state.me))
   },
 
   LOGOUT(state) {
     state.authenticated = false;
     state.me = {};
+    localStorage.removeItem('auth');
   },
 
-  SET_ME(state, me) {
-    state.me = me;
-  },
+  CHANGE_URL_BACK (state, url) {
+    state.url_back = url
+  }
 };
 
 export default mutations;

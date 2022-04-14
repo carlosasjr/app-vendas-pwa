@@ -11,6 +11,12 @@ export default async ({ Vue, store }) => {
       );
     },
 
+    sleep(ms) {
+      return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+      });
+    },
+
     strToFloat(value) {
       value = value ?? 0;
 

@@ -5,6 +5,20 @@ import { status } from "src/boot/constants";
 const RESOURCE = "sales";
 
 const actions = {
+  getApiSalesByCompanySeller({ commit }, params) {
+    return new Promise((resolve, reject) => {
+      api
+        .get(`${RESOURCE}/all-seller`, { params })
+        .then((response) =>  commit("SET_API_SALES", response.data.data) )
+        .catch((error) => {
+          if (error.response) {
+            reject(error.response.data.errors);
+          } else reject(error);
+        });
+    });
+  },
+
+
   getAllLocalSalesByCompany({ commit }, params) {
     return new Promise((resolve, reject) => {
       db.collection(`${RESOURCE}`)

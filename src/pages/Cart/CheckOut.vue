@@ -5,7 +5,14 @@
         <div class="row no-wrap items-center">
           <div class="col text-h6 ellipsis">{{ cart.client.name }}</div>
           <div
-            class="col-auto text-grey text-caption q-pt-md row no-wrap items-center"
+            class="
+              col-auto
+              text-grey text-caption
+              q-pt-md
+              row
+              no-wrap
+              items-center
+            "
           >
             <q-icon name="people" />
           </div>

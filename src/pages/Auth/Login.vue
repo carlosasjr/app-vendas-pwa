@@ -62,7 +62,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["localCompanies", "localSellers"]),
+    ...mapGetters(["localCompanies", "localSellers", "me"]),
   },
 
   methods: {
@@ -75,7 +75,6 @@ export default {
     ]),
 
     ...mapMutations({
-      setMe: "SET_ME",
       setAuthenticated: "SET_AUTHENTICATED",
     }),
 
@@ -117,8 +116,7 @@ export default {
         let seller = await this.getLocalSellerById(this.form.vendedor_id);
 
         if (seller.password == this.form.password) {
-          this.setAuthenticated(true);
-          this.setMe(seller);
+          this.setAuthenticated(seller);
           this.$router.push("/admin");
         } else {
           this.$q.notify({

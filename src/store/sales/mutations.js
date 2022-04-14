@@ -1,7 +1,11 @@
 import { status } from "src/boot/constants";
 const mutations = {
-  SET_LOCAL_ALL_SALES(state, salers) {
-    state.localSales = salers;
+  SET_LOCAL_ALL_SALES(state, sales) {
+    state.localSales = sales;
+  },
+
+  SET_API_SALES(state, sales) {
+    state.sales = sales;
   },
 
   UPDATE_STATUS_SALE_INTEGRATED(state, uuid) {

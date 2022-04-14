@@ -64,6 +64,13 @@ const routes = [
         name: "sales.items",
         meta: { title: "Editar itens da venda", auth: true },
       },
+
+      {
+        path: "/history",
+        component: () => import("pages/History/History.vue"),
+        name: "history",
+        meta: { title: "Vendas", auth: true },
+      },
     ],
   },
 

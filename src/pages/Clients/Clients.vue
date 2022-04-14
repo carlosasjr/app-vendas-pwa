@@ -84,13 +84,33 @@ export default {
         {
           name: "name",
           align: "center",
-          field: (row) => row.name + " - " + row.cpf_cnpj,
+          field: "name",
           sortable: true,
         },
         {
+          name: "fantasy",
+          align: "center",
+          field: "fantasy",
+          sortable: true,
+        },
+        {
+          name: "cpf_cnpj",
+          align: "center",
+          field: 'cpf_cnpj',
+          sortable: true,
+        },
+
+        {
           name: "address",
           align: "center",
-          field: (row) => row.city + " /" + row.uf,
+          field: 'address',
+          sortable: true,
+        },
+
+        {
+          name: "uf",
+          align: "center",
+          field: 'uf',
           sortable: true,
         },
       ],
