@@ -27,12 +27,14 @@
 
               <q-item-label class="row">
                 <q-input
+                  @keydown="$event.key === '-' ? $event.preventDefault() : null"
                   class="col-4 q-mr-sm"
                   v-model="item.qtd"
                   label="Quant."
                 />
                 <q-input
                   v-if="visibleForm"
+                  @keydown="$event.key === '-' ? $event.preventDefault() : null"
                   class="col-4"
                   v-model="item.price"
                   label="Valor"

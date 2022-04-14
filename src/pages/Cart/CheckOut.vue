@@ -180,7 +180,7 @@
       @click="destroyCart"
     />
     <q-btn
-      v-if="statusOpen && this.balance == 0"
+      v-if="statusOpen && this.balance == 0 && this.subtotal > 0"
       color="blue"
       class="q-mb-sm full-width"
       label="Finalizar"

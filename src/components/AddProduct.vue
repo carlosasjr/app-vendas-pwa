@@ -28,13 +28,15 @@
               <q-item-section>
                 <q-input
                   input-class="text-right"
-                  type="number"
+                  @keydown="$event.key === '-' ? $event.preventDefault() : null"
                   v-model="item.qtd"
                   label="Quantidade *"
+                  v-money="moneyFormat"
                   lazy-rules="ondemand"
                   :rules="[
                     (val) =>
-                      (val && val.length > 0) || 'Quantidade obrigatória',
+                      (val && val.length > 0 && val > '0') ||
+                      'Quantidade obrigatória',
                   ]"
                 />
               </q-item-section>
@@ -43,6 +45,7 @@
             <q-item class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
               <q-item-section>
                 <q-input
+                  @keydown="$event.key === '-' ? $event.preventDefault() : null"
                   v-if="formShow"
                   input-class="text-right"
                   v-model="item.price"
@@ -56,6 +59,7 @@
             <q-item class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
               <q-item-section>
                 <q-input
+                  @keydown="$event.key === '-' ? $event.preventDefault() : null"
                   :disable="porcDisable"
                   input-class="text-right"
                   v-model="item.porc"
@@ -68,6 +72,7 @@
             <q-item class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
               <q-item-section>
                 <q-input
+                  @keydown="$event.key === '-' ? $event.preventDefault() : null"
                   :disable="descDisable"
                   input-class="text-right"
                   v-model="item.desc"
@@ -171,7 +176,7 @@ export default {
 
       item: {
         product: "",
-        qtd: 1,
+        qtd: "1,00",
         porc: 0,
         desc: 0,
         price: 0,
@@ -238,7 +243,7 @@ export default {
 
     clear() {
       this.item = {
-        qtd: 1,
+        qtd: "1,00",
         porc: 0,
         desc: 0,
         price: 0,
