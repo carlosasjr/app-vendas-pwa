@@ -1,161 +1,169 @@
 <template>
   <q-page>
-    <q-card class="my-card">
-      <q-card-section>
-        <div class="row no-wrap items-center">
-          <div class="col text-h6 ellipsis">{{ cart.client.name }}</div>
-          <div
-            class="
-              col-auto
-              text-grey text-caption
-              q-pt-md
-              row
-              no-wrap
-              items-center
-            "
-          >
-            <q-icon name="people" />
+    <div class="row">
+      <div class="col-12">
+        <q-card>
+          <q-card-section>
+            <div class="row no-wrap items-center">
+              <div class="col text-h6">{{ cart.client.name }}</div>
+              <div
+                class="
+                  col-auto
+                  text-grey text-caption
+                  q-pt-md
+                  row
+                  no-wrap
+                  items-center
+                "
+              >
+                <q-icon name="people" />
+              </div>
+            </div>
+          </q-card-section>
+
+          <q-card-section class="q-pt-none">
+            <div class="text-subtitle1">Pedido de Venda</div>
+            <div class="text-caption text-grey">
+              {{ cart.status }} - {{ cart.created_at | formatDateBr }}
+            </div>
+            <div class="text-caption text-grey">
+              {{ cart.uuid }}
+            </div>
+          </q-card-section>
+
+          <q-separator />
+
+          <div class="q-pa-md">
+            <q-list>
+              <q-item
+                v-for="(item, index) in cart.items"
+                :key="index"
+                clickable
+                v-ripple
+              >
+                <q-item-section avatar v-if="statusOpen">
+                  <q-btn
+                    @click="destroyItem(item)"
+                    size="12px"
+                    flat
+                    dense
+                    round
+                    color="red"
+                    icon="delete"
+                  />
+                </q-item-section>
+
+                <q-item-section>
+                  <q-item-label> {{ item.product.description }}</q-item-label>
+                  <q-item-label caption lines="1"
+                    >{{ item.qtd }} X {{ item.price }}</q-item-label
+                  >
+                  <q-item-label v-if="item.descReal != ''" caption lines="1"
+                    >Desc. R${{ item.descReal | formatPrice }}</q-item-label
+                  >
+                </q-item-section>
+
+                <q-item-section side>
+                  <q-item-label
+                    >R$ {{ item.totalItem | formatPrice }}</q-item-label
+                  >
+                </q-item-section>
+              </q-item>
+            </q-list>
           </div>
-        </div>
-      </q-card-section>
 
-      <q-card-section class="q-pt-none">
-        <div class="text-subtitle1">Pedido de Venda</div>
-        <div class="text-caption text-grey">
-          {{ cart.status }} - {{ cart.created_at | formatDateBr }}
-        </div>
-        <div class="text-caption text-grey">
-          {{ cart.uuid }}
-        </div>
-      </q-card-section>
+          <q-separator />
 
-      <q-separator />
+          <div class="q-pa-md">
+            <q-list>
+              <q-item>
+                <q-item-section>
+                  <q-item-label><strong> Total</strong></q-item-label>
+                </q-item-section>
 
-      <div class="q-pa-md">
-        <q-list>
-          <q-item
-            v-for="(item, index) in cart.items"
-            :key="index"
-            clickable
-            v-ripple
-          >
-            <q-item-section avatar v-if="statusOpen">
-              <q-btn
-                @click="destroyItem(item)"
-                size="12px"
-                flat
-                dense
-                round
-                color="red"
-                icon="delete"
-              />
-            </q-item-section>
+                <q-item-section side>
+                  <q-item-label
+                    ><strong>
+                      R$ {{ subtotal | formatPrice }}</strong
+                    ></q-item-label
+                  >
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </div>
 
-            <q-item-section>
-              <q-item-label> {{ item.product.description }}</q-item-label>
-              <q-item-label caption lines="1"
-                >{{ item.qtd }} X {{ item.price }}</q-item-label
+          <q-separator />
+
+          <div class="q-pa-md">
+            <q-card-section class="q-pt-none">
+              <div class="text-subtitle1">Formas de Pagamento</div>
+            </q-card-section>
+
+            <q-list>
+              <q-item
+                v-for="(item, index) in cart.payments"
+                :key="index"
+                clickable
+                v-ripple
               >
-              <q-item-label v-if="item.descReal != ''" caption lines="1"
-                >Desc. R${{ item.descReal | formatPrice }}</q-item-label
-              >
-            </q-item-section>
+                <q-item-section avatar v-if="statusOpen">
+                  <q-btn
+                    @click="destroyForm(item)"
+                    size="12px"
+                    flat
+                    dense
+                    round
+                    color="red"
+                    icon="delete"
+                  />
+                </q-item-section>
 
-            <q-item-section side>
-              <q-item-label>R$ {{ item.totalItem | formatPrice }}</q-item-label>
-            </q-item-section>
-          </q-item>
-        </q-list>
+                <q-item-section>
+                  <q-item-label lines="2">
+                    {{ item.formPayment.description }}
+                  </q-item-label>
+                  <q-item-label caption lines="2">{{
+                    item.conditionPayment.description
+                  }}</q-item-label>
+                </q-item-section>
+
+                <q-item-section side>
+                  <q-item-label>R$ {{ item.price }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+
+            <q-list>
+              <q-item>
+                <q-item-section>
+                  <q-item-label><strong> Total Formas</strong></q-item-label>
+                  <q-item-label>Restante</q-item-label>
+                </q-item-section>
+
+                <q-item-section side>
+                  <q-item-label
+                    ><strong>
+                      R$ {{ totalFormas | formatPrice }}</strong
+                    ></q-item-label
+                  >
+                  <q-item-label>R$ {{ balance | formatPrice }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </div>
+
+          <q-separator />
+
+          <q-btn
+            v-if="this.balance != '0'"
+            @click="newForm"
+            color="green"
+            class="q-mb-sm full-width"
+            label="Novo Forma de Pagamento"
+          />
+        </q-card>
       </div>
-
-      <q-separator />
-
-      <div class="q-pa-md">
-        <q-list>
-          <q-item>
-            <q-item-section>
-              <q-item-label><strong> Total</strong></q-item-label>
-            </q-item-section>
-
-            <q-item-section side>
-              <q-item-label
-                ><strong> R$ {{ subtotal | formatPrice }}</strong></q-item-label
-              >
-            </q-item-section>
-          </q-item>
-        </q-list>
-      </div>
-
-      <q-separator />
-
-      <div class="q-pa-md">
-        <q-card-section class="q-pt-none">
-          <div class="text-subtitle1">Formas de Pagamento</div>
-        </q-card-section>
-
-        <q-list>
-          <q-item
-            v-for="(item, index) in cart.payments"
-            :key="index"
-            clickable
-            v-ripple
-          >
-            <q-item-section avatar v-if="statusOpen">
-              <q-btn
-                @click="destroyForm(item)"
-                size="12px"
-                flat
-                dense
-                round
-                color="red"
-                icon="delete"
-              />
-            </q-item-section>
-
-            <q-item-section>
-              <q-item-label lines="1">
-                {{ item.formPayment.description }}
-              </q-item-label>
-              <q-item-label caption lines="1">{{
-                item.conditionPayment.description
-              }}</q-item-label>
-            </q-item-section>
-
-            <q-item-section side>
-              <q-item-label>R$ {{ item.price }}</q-item-label>
-            </q-item-section>
-          </q-item>
-        </q-list>
-
-        <q-list>
-          <q-item>
-            <q-item-section>
-              <q-item-label><strong> Total Formas</strong></q-item-label>
-              <q-item-label>Restante</q-item-label>
-            </q-item-section>
-
-            <q-item-section side>
-              <q-item-label
-                ><strong>
-                  R$ {{ totalFormas | formatPrice }}</strong
-                ></q-item-label
-              >
-              <q-item-label>R$ {{ balance | formatPrice }}</q-item-label>
-            </q-item-section>
-          </q-item>
-        </q-list>
-      </div>
-
-      <q-separator />
-
-      <q-btn
-        v-if="this.balance != '0'"
-        @click="newForm"
-        color="green"
-        class="q-mb-sm full-width"
-        label="Novo Forma de Pagamento"
-      />
-    </q-card>
+    </div>
 
     <q-btn
       v-if="statusOpen"
@@ -464,3 +472,6 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+</style>
