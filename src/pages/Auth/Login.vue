@@ -43,7 +43,9 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
 export default {
   async mounted() {
     let device = await this.$db.collection("device").get();
-    this.device = device[0].device;
+    if (device.length > 0) {
+      this.device = device[0].device;
+    }
 
     this.getLocalCompanies();
   },
